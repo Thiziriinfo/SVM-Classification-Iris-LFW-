@@ -1,78 +1,111 @@
-# TP - Support Vector Machines (SVM)
+# 🤖 SVM Classification — Iris & Face Recognition (LFW)
 
-## Auteurs :
-- **Nom** : ABCHICHE
-- **Prénom** : THIZIRI
-
-## Description :
-Ce dépôt contient le compte-rendu du TP sur les machines à vecteurs de support (SVM). Le compte-rendu a été rédigé en \LaTeX{} et compile tous les résultats obtenus lors des différentes étapes du TP, ainsi que le code Python utilisé pour la classification des données. Le TP vise à appliquer des techniques de classification à l'aide des machines à vecteurs de support (SVM) sur différents jeux de données. Nous avons notamment comparé l'impact des noyaux linéaires et polynomiaux, exploré l'effet des variables de nuisance, et amélioré les performances grâce à une réduction de dimension par PCA.
-
-## Arborescence du projet :
-- **src/** : Contient les fichiers Python nécessaires à l'exécution des analyses (ex. : `script.py`).
-- **images/** : Contient les images générées par les scripts Python.
-- **TPABCHICHETHIZIRI_SVM.tex** : Le fichier \LaTeX{} contenant le compte-rendu complet du TP.
-- **TPABCHICHETHIZIRI_SVM.pdf** : Le fichier PDF généré à partir du fichier \LaTeX{}.
-- **README.md** : Ce fichier, contenant les instructions pour compiler le projet.
-- **.gitignore** : Fichier pour ignorer les fichiers inutiles dans le dépôt (fichiers temporaires, logs, etc.).
-- **requirements.txt** : Liste des dépendances Python nécessaires à l'exécution du projet.
-
-## Instructions de compilation
-
-Pour générer le PDF à partir du fichier LaTeX, suivez ces étapes :
-### Compiler le fichier \LaTeX{}
-1. **Installer \LaTeX{} :**
-   - Si vous n'avez pas \LaTeX{} installé sur votre machine, vous pouvez le télécharger à partir de [TeX Live](https://www.tug.org/texlive/) ou [MiKTeX](https://miktex.org/).
-   - Alternativement, vous pouvez utiliser un service en ligne comme [Overleaf](https://www.overleaf.com/) qui permet de travailler directement dans le navigateur sans installation.
-
-2. **Compiler le fichier :**
-   - Ouvrez un terminal (ou, si vous utilisez Overleaf, téléchargez votre fichier `.tex` sur la plateforme).
-   - Si vous utilisez un terminal, naviguez jusqu'au répertoire contenant le fichier LaTeX :
-     ```bash
-     cd /chemin/vers/le/dossier
-     ```
-   - Pour compiler le fichier `TPABCHICHETHIZIRI_SVM.tex`, exécutez la commande suivante :
-     ```bash
-     pdflatex TPABCHICHETHIZIRI_SVM.tex
-     ```
-   - Cette commande va générer un fichier PDF à partir du fichier `.tex`. Vous devrez peut-être exécuter la commande plusieurs fois pour résoudre toutes les références et les citations.
-
-3. **Vérification :**
-   - Une fois la compilation terminée, vérifiez que le fichier PDF (`TPABCHICHETHIZIRI_SVM.pdf`) a été créé dans le même répertoire. Ouvrez-le pour visualiser le rapport.
-
-### Exécuter le code Python
-
-Pour exécuter le code Python contenu dans ce projet, suivez ces étapes :
-
-1. **Installer les dépendances :**
-   - Assurez-vous que vous avez installé les bibliothèques nécessaires. Vous pouvez le faire en exécutant :
-     ```bash
-     pip install -r requirements.txt
-     ```
-
-2. **Naviguer vers le dossier des scripts :**
-   - Ouvrez un terminal et accédez au dossier `src/` où se trouvent les scripts Python :
-     ```bash
-     cd src/
-     ```
-
-3. **Exécuter le script Python :**
-   - Pour exécuter le script principal, utilisez la commande suivante :
-     ```bash
-     python code_source.py
-     ```
-   - Si vous souhaitez lancer l'interface graphique pour l'exploration des SVM, exécutez également :
-     ```bash
-     python svm_gui.py
-     ```
-
-4. **Vérification des résultats :**
-   - Après l'exécution des scripts, vérifiez les résultats affichés dans le terminal. Les images générées seront sauvegardées dans le dossier `images/`.
-
-## Remarques :
-- Assurez-vous que tous les fichiers nécessaires (code Python, images, fichiers .tex) sont présents dans leur répertoire respectif avant de commencer la compilation et l'exécution.
-- Si vous rencontrez des problèmes lors de la compilation ou de l'exécution des scripts, consultez la documentation des bibliothèques utilisées ou les logs d'erreur.
+**Exploration des machines à vecteurs de support sur deux cas d'usage : classification de données structurées et reconnaissance faciale sur images réelles**
 
 ---
-### 1. Cloner le dépôt :
+
+## Objectifs du projet
+
+Ce projet explore les SVMs sous deux angles complémentaires :
+
+1. **Classification binaire sur données structurées** — dataset Iris, comparaison noyau linéaire vs polynomial, tuning par GridSearchCV
+2. **Reconnaissance faciale** — classification binaire sur le dataset LFW (Labeled Faces in the Wild), impact des variables de bruit, réduction de dimension par PCA
+
+L'idée centrale : comprendre comment le choix du noyau, la régularisation, et la dimensionnalité impactent les performances d'un SVM — et mesurer ces effets de façon rigoureuse.
+
+---
+
+## Stack technique
+
+`Python` · `scikit-learn` · `NumPy` · `Matplotlib` · `PCA` · `GridSearchCV`
+
+---
+
+## Dataset
+
+### Iris (classification structurée)
+- Source : `sklearn.datasets.load_iris`
+- Périmètre : classification binaire (classes 1 et 2), 2 features pour visualisation
+- Normalisation : StandardScaler avant entraînement
+
+### LFW — Labeled Faces in the Wild (reconnaissance faciale)
+- Source : `sklearn.datasets.fetch_lfw_people`
+- Périmètre : classification binaire entre deux personnalités publiques (Tony Blair vs Colin Powell)
+- Features : luminosité moyenne par pixel (réduction du RGB en grayscale)
+- Normalisation : centrage-réduction feature par feature
+
+---
+
+## Démarche
+
+### 1. Classification Iris — noyaux linéaire vs polynomial
+
+Comparaison des deux noyaux sur le même split train/test (50/50) avec GridSearchCV 5-folds :
+
+- **Noyau linéaire** : recherche sur C ∈ [10⁻³, 10³] (200 valeurs log-space)
+- **Noyau polynomial** : recherche sur C, gamma, degree (1, 2, 3)
+
+Visualisation des frontières de décision pour interpréter les différences de comportement entre les deux noyaux.
+
+### 2. Reconnaissance faciale — impact de la régularisation
+
+Évaluation de l'accuracy sur X_test pour C ∈ [10⁻⁵, 10⁵] avec noyau linéaire. Sélection du meilleur C, visualisation des prédictions sur images test, et inspection des coefficients du modèle (heatmap des poids par pixel).
+
+### 3. Robustesse aux variables de bruit
+
+Expérience contrôlée : comparaison de la performance SVM avec et sans ajout de 300 features aléatoires (bruit gaussien σ=1).
+
+| Configuration | Train score | Test score |
+|--------------|-------------|------------|
+| Sans bruit | ~0.97 | ~0.87 |
+| Avec 300 features bruit | dégradation visible | dégradation visible |
+
+### 4. Réduction de dimension par PCA
+
+Application d'une PCA à 100 composantes sur les données bruitées avant entraînement SVM. Résultat : les performances retrouvent un niveau comparable au cas sans bruit, ce qui illustre concrètement l'utilité de la PCA comme étape de préprocessing en haute dimension.
+
+---
+
+## Résultats clés
+
+- Le **noyau polynomial** surpasse légèrement le linéaire sur Iris grâce à sa capacité à modéliser des frontières non-linéaires
+- Le **meilleur C** pour la reconnaissance faciale se situe entre 10⁻² et 10¹ — au-delà, le modèle surajuste
+- **+300 features de bruit** dégradent les performances de façon mesurable : confirmation que la dimensionnalité est un facteur de risque
+- **PCA à 100 composantes** restaure les performances en éliminant les dimensions non-informatives
+
+---
+
+## Structure du projet
+
+```
+├── src/
+│   ├── code_source.py      # Pipeline principal : Iris + LFW + bruit + PCA
+│   └── svm_source.py       # Fonctions utilitaires (plot_gallery, title, frontiere)
+├── images/                 # Visualisations générées
+├── requirements.txt        # Dépendances Python
+└── README.md               # Ce fichier
+```
+
+---
+
+## Lancer le projet
+
 ```bash
-git clone [https://github.com/Thiziriinfo/TP_Apprentissage_Statistiques.git]
+git clone https://github.com/Thiziriinfo/SVM-Classification-Iris-LFW.git
+cd SVM-Classification-Iris-LFW
+pip install scikit-learn numpy matplotlib
+python src/code_source.py
+```
+
+> Le dataset LFW est téléchargé automatiquement par scikit-learn au premier lancement (~200MB).
+
+---
+
+## Ce que ce projet illustre
+
+Les SVMs ont une réputation de "boîte noire" injustifiée — les coefficients du noyau linéaire sur LFW sont directement interprétables en heatmap sur les pixels. La visualisation des frontières de décision sur Iris montre immédiatement pourquoi un noyau polynomial peut être nécessaire sur des données non-linéairement séparables.
+
+L'expérience bruit + PCA est la partie la plus instructive : elle reproduit un scénario réel où un dataset contient beaucoup de features non-informatives (ce qui est la règle, pas l'exception en pratique).
+
+---
+
