@@ -1,4 +1,4 @@
-#  SVM Classification — Iris & Face Recognition (LFW)
+# SVM Classification — Iris & Face Recognition (LFW)
 
 **Exploration des machines à vecteurs de support sur deux cas d'usage : classification de données structurées et reconnaissance faciale sur images réelles**
 
